@@ -5,7 +5,6 @@ const paragrafoMensagem = document.getElementById('mensagem')
 const botaoEnviar = document.getElementById('botaoEnviar')
 
 function validarFormulario(event) {
-
     event.preventDefault()
 
     paragrafoMensagem.textContent = ''

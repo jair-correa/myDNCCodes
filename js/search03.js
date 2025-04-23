@@ -3,7 +3,6 @@
 //    let resultado = parametro1 + parametro2
 //    return resultado
 //}
-
 function iniciaContador(tempo) {
     let segundosRestantes = tempo
     const atualizadorContador = setInterval(() => {
@@ -14,7 +13,6 @@ function iniciaContador(tempo) {
             segundosRestantes--;
         }
     }, 1000);
-
 }
 
 //iniciaCOntador(10)
