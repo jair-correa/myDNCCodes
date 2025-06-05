@@ -20,6 +20,24 @@ for(nbr = 10; nbr >= 1; nbr--){
         
     }
 }
+console.log("-------------------##-------------------");
+console.log("Table of Sqrt:");
+
+// Função para verificar se um número é primo
+function isPrime(n) {
+    if (n < 2) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+
+for (let nbr = 100; nbr >= 1; nbr--) {
+    let raiz = Math.sqrt(nbr).toFixed(3);
+    let primo = isPrime(nbr) ? " (primo)" : "";
+    console.log(`${nbr} => √${nbr} = ${raiz}${primo}`);
+}
+
 
 
 //for(let i = 0; i <= 10 ; i++){
