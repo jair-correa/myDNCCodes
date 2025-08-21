@@ -1,5 +1,5 @@
   // Exercício 2: Criar uma Promise que simula um pedido de compra em um e-commerce.
-  let promessaDePedidoConfirmado = new Promise((resolve, reject) =>{
+  let promessaDePedidoConfirmado =  () => new Promise((resolve, reject) =>{
     console.log("Processando seu pedido..."); 
 
     setTimeout(()=>{
@@ -11,8 +11,11 @@
       else reject({confirmation:false, message: "O pedido nao pose ser confirmado"})
     }, 5000)
   })
-
-  let promessaDePagamento = (pedido)=> new Promise((resolve, reject)=>{
+  //Promise simulando o pagamento de um pedido
+  //Aguardando o pagamento ser aprovado
+  //Se o pagamento for aprovado, o pedido é confirmado
+  //Se o pagamento for recusado, o pedido é cancelado
+  let promessaDePagamento = (pedido) => new Promise((resolve, reject)=>{
     console.log("Aguardando pagamento ser aprovado...");
     setTimeout(()=>{
       let pagamentoAprovado = true
@@ -29,12 +32,16 @@
     
   })
 
-  const promessaResolvida = promessaDePedidoConfirmado
-    .then((pedido)=>{
+  async function promessaDeCompra(){
+    try {
+      const pedido = await promessaDePedidoConfirmado();
       console.log("Pedido recebido: ", pedido)
-      return promessaDePagamento(pedido)
-    })
-    .then((pagamento) =>{(console.log("Pedido confirmado: ", pagamento))})
-    .catch((erro)=>{
-      console.log("Erro: ", erro)
-    })
+
+      const pagamento = await promessaDePagamento(pedido)
+      console.log("Pedido confirmado: ", pagamento)
+    }catch(erro){
+      console.log("O pagamento foi recusado. Tente novamente: ", erro)
+    }
+  }
+  
+  promessaDeCompra()
