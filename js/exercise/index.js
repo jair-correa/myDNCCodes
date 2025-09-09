@@ -1,3 +1,5 @@
+const { parse } = require("path");
+
 let tasks = [
     {id:1, description:'comprar pão', checked:false},
     {id:2, description:'passear com o cachorro', checked:false},
@@ -12,6 +14,10 @@ const removeTask = (taskId) => {
         .removeChild(document.getElementById(taskId))
 }
 
+const removeDoneTasks = () => {
+    const tasksToRemove = tasks.filter(({checked}) => checked )
+    console.log(tasksToRemove)
+}
 const createTaskListItem = (task, checkbox) => {
     const list = document.getElementById('todo-list');
     const toDo = document.createElement('li');
@@ -32,6 +38,16 @@ const createTaskListItem = (task, checkbox) => {
     return toDo;
 }
 
+const onCheckboxClick = (event) => {
+    const [id] = event.target.id.split('-');
+    
+    tasks = tasks.map((task) => {
+        if (parseInt(id) === parseInt(task.id)) {
+            return {...task, checked: event.target.checked}
+        }
+    })
+}
+
 const getCheckboxInput = ({id, description, checked}) => {
     const checkbox = document.createElement('input');
     const label = document.createElement('label');
@@ -41,6 +57,7 @@ const getCheckboxInput = ({id, description, checked}) => {
     checkbox.type = 'checkbox';
     checkbox.id = checkboxId;
     checkbox.checked = checked || false;
+    checkbox.addEventListener('change', onCheckboxClick)
 
     label.textContent = description;
     label.htmlFor = checkboxId;
