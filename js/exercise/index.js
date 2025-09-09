@@ -1,4 +1,4 @@
-const { parse } = require("path");
+//const { parse } = require("path");
 
 let tasks = [
     {id:1, description:'comprar pão', checked:false},
@@ -45,6 +45,7 @@ const onCheckboxClick = (event) => {
         if (parseInt(id) === parseInt(task.id)) {
             return {...task, checked: event.target.checked}
         }
+        return task;
     })
 }
 
