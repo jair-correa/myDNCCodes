@@ -13,14 +13,25 @@ const removeTask = (taskId) => {
         .getElementById("todo-list")
         .removeChild(document.getElementById(taskId))
 }
-
 const removeDoneTasks = () => {
-    const tasksToRemove = tasks //cria uma lista apenas com tarefas que queiram ser removidas
-        .filter(({checked}) => checked )
-        .map(({id}) => id)
+    const tasksToRemove = tasks
+        .filter(({checked}) => checked)
+        .map(({id}) => id);
+
+    // mantém só as não concluídas
     tasks = tasks.filter(({checked}) => !checked);
 
-}
+    // percorre IDs e remove do DOM
+    tasksToRemove.forEach((taskId) => {
+        const taskElement = document.getElementById(taskId);
+        if (taskElement) {
+            document
+                .getElementById("todo-list")
+                .removeChild(taskElement);
+        }
+    });
+};
+
 const createTaskListItem = (task, checkbox) => {
     const list = document.getElementById('todo-list');
     const toDo = document.createElement('li');
