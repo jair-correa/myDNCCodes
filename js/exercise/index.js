@@ -6,13 +6,24 @@ let tasks = [
     {id:3, description:'fazer almoço', checked:false},
 ]
 
-const removeTask = (taskId) => {
+const getTasksFromLocalStorage = () => {
+    const localTasks = JSON.parse(window.localStorage.getItem('tasks'))
+    return localTasks ? localTasks : []; // Se as tarefas existirem, retorna; senão, array vazio
+} 
+
+const setTasksInLocalStorage = () => {
+    window.localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+const removeTask = (taskId) => { 
     tasks = tasks.filter(({id}) => parseInt(id) !== parseInt(taskId));
- 
+    setTasksInLocalStorage();
+
     document
         .getElementById("todo-list")
-        .removeChild(document.getElementById(taskId))
+        .removeChild(document.getElementById(taskId));
 }
+
 const removeDoneTasks = () => {
     const tasksToRemove = tasks
         .filter(({checked}) => checked)
@@ -20,6 +31,7 @@ const removeDoneTasks = () => {
 
     // mantém só as não concluídas
     tasks = tasks.filter(({checked}) => !checked);
+    setTasksInLocalStorage();
 
     // percorre IDs e remove do DOM
     tasksToRemove.forEach((taskId) => {
@@ -60,7 +72,9 @@ const onCheckboxClick = (event) => {
             return {...task, checked: event.target.checked}
         }
         return task;
-    })
+    });
+
+    setTasksInLocalStorage();
 }
 
 const getCheckboxInput = ({id, description, checked}) => {
@@ -103,13 +117,16 @@ const createTask = (event) => {
     createTaskListItem(newTaskData, checkbox);
 
     tasks = [...tasks, newTaskData];
+    setTasksInLocalStorage();
+
+    event.target.reset(); // limpa o formulário após criar
 }
 
 window.onload = function(){
     const form  = document.getElementById('create-todo-form');
     form.addEventListener('submit', createTask);
     
-    // renderiza tarefas iniciais com botão e checkbox
+    tasks = getTasksFromLocalStorage(); // atualiza a variável global com o localStorage
     tasks.forEach((task) => {
         const checkbox = getCheckboxInput(task);
         createTaskListItem(task, checkbox);
