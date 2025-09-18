@@ -8,15 +8,18 @@ let tasks = [
 
 const removeTask = (taskId) => {
     tasks = tasks.filter(({id}) => parseInt(id) !== parseInt(taskId));
-
+ 
     document
         .getElementById("todo-list")
         .removeChild(document.getElementById(taskId))
 }
 
 const removeDoneTasks = () => {
-    const tasksToRemove = tasks.filter(({checked}) => checked )
-    console.log(tasksToRemove)
+    const tasksToRemove = tasks //cria uma lista apenas com tarefas que queiram ser removidas
+        .filter(({checked}) => checked )
+        .map(({id}) => id)
+    tasks = tasks.filter(({checked}) => !checked);
+
 }
 const createTaskListItem = (task, checkbox) => {
     const list = document.getElementById('todo-list');
@@ -36,7 +39,7 @@ const createTaskListItem = (task, checkbox) => {
     list.appendChild(toDo);
 
     return toDo;
-}
+}   
 
 const onCheckboxClick = (event) => {
     const [id] = event.target.id.split('-');
