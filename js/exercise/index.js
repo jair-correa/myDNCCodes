@@ -1,11 +1,4 @@
 //const { parse } = require("path");
-
-let tasks = [
-    {id:1, description:'comprar pão', checked:false},
-    {id:2, description:'passear com o cachorro', checked:false},
-    {id:3, description:'fazer almoço', checked:false},
-]
-
 const getTasksFromLocalStorage = () => {
     const localTasks = JSON.parse(window.localStorage.getItem('tasks'))
     return localTasks ? localTasks : []; // Se as tarefas existirem, retorna; senão, array vazio
@@ -16,8 +9,10 @@ const setTasksInLocalStorage = () => {
 }
 
 const removeTask = (taskId) => { 
-    tasks = tasks.filter(({id}) => parseInt(id) !== parseInt(taskId));
-    setTasksInLocalStorage();
+
+    const tasks = getTasksFromLocalStorage();// mantém só as tarefas que não foram removidas
+    const updatedTasks = tasks.filter(({id}) => parseInt(id) !== parseInt(taskId));
+    setTasksInLocalStorage(updatedTasks);
 
     document
         .getElementById("todo-list")
