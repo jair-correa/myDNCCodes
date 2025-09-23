@@ -104,19 +104,27 @@ const getNewTaskData = (event) => {
     return {id, description, checked:false}; 
 }
 
-const createTask = (event) => {
-    event.preventDefault();
+const getCreatedTaskInfo = (event) => new Promise((resolve) => {
+    setTimeout(()=>{
+        resolve(getNewTaskData(event));
+    },3000)
+})
 
-    const newTaskData = getNewTaskData(event);
+const createTask = async (event) => {
+    event.preventDefault();
+    document.getElementById('save-task').setAttribute('disabled', 'true')
+    
+    const newTaskData = await getCreatedTaskInfo(event);
     const checkbox = getCheckboxInput(newTaskData);
     createTaskListItem(newTaskData, checkbox);
-
+    
     tasks = [...tasks, newTaskData];
     setTasksInLocalStorage();
-
+    
     event.target.reset(); // limpa o formulário após criar
-
+    
     document.getElementById('description').textContent =  '';
+    document.getElementById('save-task').removeAttribute('disabled')
 }
 
 window.onload = function(){
