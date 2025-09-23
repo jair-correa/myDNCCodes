@@ -1,7 +1,7 @@
 //const { parse } = require("path");
 const getTasksFromLocalStorage = () => {
     const localTasks = JSON.parse(window.localStorage.getItem('tasks'))
-    return localTasks ? localTasks : []; // Se as tarefas existirem, retorna; senão, array vazio
+    return localTasks ? localTasks : []; // Se as tarefas existirem, retorna tasks senão, array vazio[]
 } 
 
 const setTasksInLocalStorage = () => {
@@ -115,6 +115,8 @@ const createTask = (event) => {
     setTasksInLocalStorage();
 
     event.target.reset(); // limpa o formulário após criar
+
+    document.getElementById('description').textContent =  '';
 }
 
 window.onload = function(){
