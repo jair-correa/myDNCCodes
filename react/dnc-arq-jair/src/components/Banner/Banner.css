@@ -1,4 +1,5 @@
-.banner{
+.hero{
+    background-color:#ccc;
     background-position: center;
     background-size: cover;
     height: 356px;

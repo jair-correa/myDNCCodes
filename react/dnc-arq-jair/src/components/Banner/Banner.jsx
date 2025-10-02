@@ -1,10 +1,10 @@
 //ASSETS
-import "./Banner.css";
+import "./Hero.css";
 
-function Banner(props) {
+function Hero(props) {
   return (
     <div
-      className="banner d-flex al-end"
+      className="hero d-flex al-end"
       style={{ backgroundImage: `url(/${props.image})` }}
     >
       <div className="container">
@@ -16,4 +16,4 @@ function Banner(props) {
   );
 }
 
-export default Banner;
+export default Hero;
