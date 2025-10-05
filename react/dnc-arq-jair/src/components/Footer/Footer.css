@@ -1,3 +1,4 @@
+/*FOOTER.CSS*/
 .footer-logo-col {
   max-width: 340px;
   width: 100%;
@@ -8,7 +9,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* força alinhamento à esquerda */
+  align-items: flex-start; /* Desktop alinhado à esquerda */
 }
 
 .footer-col ul {
@@ -53,16 +54,16 @@ footer a:hover {
 footer .social-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem; /* substitui margin-right fixo */
+  gap: 2rem;
   margin-top: 1.5rem;
 }
 
-.footer-copy {  
+.footer-copy {
   margin: 5rem 0 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; /* evita quebra feia em telas médias */
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -70,27 +71,42 @@ footer .social-links {
   display: flex;
   gap: 1.5rem;
 }
-footer nav a {margin:21.6px 0 24px 0;}
 
+footer nav a {
+  margin: 21.6px 0 24px 0;
+}
+
+/* ----------- MOBILE ----------- */
 @media (max-width: 768px) {
   .d-flex {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* centraliza no mobile */
+    justify-content: center;
     gap: 2rem;
+    text-align: center;
   }
 
   .footer-copy {
     flex-direction: column;
+    justify-content: center;
     text-align: center;
     margin: 3rem 0;
     gap: 1rem;
   }
 
-  .footer-col {
-    max-width: 100%;
-  }
-
+  .footer-col,
   .footer-logo-col {
     max-width: 100%;
+    align-items: center; /* centraliza colunas no mobile */
+    text-align: center;
+  }
+
+  .footer-col li,
+  .footer-col a {
+    text-align: center; /* força os links ficarem centralizados */
+  }
+
+  footer .social-links {
+    justify-content: center; /* centraliza os ícones */
   }
 }

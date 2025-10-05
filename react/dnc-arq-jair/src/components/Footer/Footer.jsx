@@ -1,3 +1,4 @@
+//FOOTER.JSX
 import { Link } from 'react-router-dom';
 
 // ASSETS
