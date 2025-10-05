@@ -1,12 +1,12 @@
 .button {
-  border-radius: 18px;
+  border-radius: 14px;
   border: none;
   column-gap: 10px;
   cursor: pointer;
   display: flex;
   font-size: 18px;
   font-weight: 600;
-  padding: 25px 50px;
+  padding: 15px 30px;
   transition: background-color 0.3 ease;
 }
 
