@@ -7,7 +7,7 @@
 // eslint-disable-next-line no-unused-vars
 export const getApiData = async (endpoint, params) => {
   try {
-    const url = new URL(`https://dnc-react-api-versel.app/files/${endpoint}`);
+    const url = new URL(`https://dnc-react-api.vercel.app/files/${endpoint}`);
     const response = await fetch(url, { method: 'GET' });
 
     if (!response.ok) {
