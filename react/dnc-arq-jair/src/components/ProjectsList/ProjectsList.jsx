@@ -1,86 +1,55 @@
-//importacoes de hooks para atualizar o estado e atualizacao do conteudo e buscar dados na API
 import { useState, useEffect } from 'react';
 
-//ASSETS
+// ASSETS
 import './ProjectsList.css';
 import LikedFilled from '@assets/like-filled.svg';
 import Liked from '@assets/like.svg';
 
-//UTIlS
-import { getApiData } from '../../services/js/apiServices';
+// UTILS
+import { getApiData } from '@services/js/apiServices';
 
 function ProjectsList() {
-  //estado para armazenar os dados da API
-  //eslint-disable-next-line no-unused-vars
-  const [projects, setProjects] = useState();
+  const [projects, setProjects] = useState([]);
 
-  //useEffect para buscar os dados da API quando o componente for montado
   useEffect(() => {
     const fetchData = async () => {
       try {
         const projectsResponse = await getApiData('projects');
-        setProjects(projectsResponse);
+        setProjects(projectsResponse || []);
       } catch {
         setProjects([]);
       }
     };
     fetchData();
-  }, []); //garantir que a funcao seja executada apenas uma vez quando o componente dor montado
+  }, []); // garante que a função seja executada apenas uma vez quando o componente for montado
+
+  // Corrige HTTPS -> HTTP apenas no ambiente local (opcional)
+  const fixImageUrl = (url) => {
+    if (window.location.hostname === 'localhost' && url?.startsWith('https://')) {
+      return url.replace('https://', 'http://');
+    }
+    return url;
+  };
+
   return (
     <div className='projects-section'>
       <div className='projects-hero'>
         <h2>Follow Our Projects</h2>
-        <p>It is a long established fact that a reader will be distracted by the of readable content of page lookings at its layouts points.</p>
+        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
       </div>
       <div className='projects-grid'>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={Liked} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
-        <div className='project-card d-flex jc-center al-center fd-column'>
-          <div className='thumb tertiary-background'></div>
-          <h3>Joao Silva</h3>
-          <p>BH, Brasil</p>
-          <img src={LikedFilled} height='20px' />
-        </div>
+        {projects.length > 0 ? (
+          projects.map((project) => (
+            <div className='project-card d-flex jc-center al-center fd-column' key={project.id || `${project.title}-${Math.random()}`}>
+              <div className='thumb tertiary-background' style={{ backgroundImage: `url(${fixImageUrl(project.thumb)})` }}></div>
+              <h3>{project.title}</h3>
+              <p>{project.subtitle}</p>
+              <img src={LikedFilled} height='20px' alt='like icon' />
+            </div>
+          ))
+        ) : (
+          <p className='no-projects'>Nenhum projeto encontrado.</p>
+        )}
       </div>
     </div>
   );
