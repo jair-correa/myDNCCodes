@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import './ProjectsList.css';
 import LikedFilled from '@assets/like-filled.svg';
 import Liked from '@assets/like.svg';
-import DncLogo from '@assets/dnc-logo.svg';
 
 // UTILS
 import { getApiData } from '@services/js/apiServices';
@@ -49,9 +48,10 @@ function ProjectsList() {
                   src={fixImageUrl(project.thumb)}
                   alt={project.title}
                   onError={(e) => {
-                    // fallback local asset when remote image fails (DNS, CORS, etc.)
+                    // When remote image fails (DNS, CORS, mixed content), hide the <img>
+                    // leaving the card without an image as requested.
                     e.currentTarget.onerror = null;
-                    e.currentTarget.src = DncLogo;
+                    e.currentTarget.style.display = 'none';
                   }}
                 />
               </div>
