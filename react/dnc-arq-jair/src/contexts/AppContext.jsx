@@ -1,29 +1,12 @@
-import React, { createContext, useState } from 'react';
-
-export const AppContext = createContext();
-
-export function AppProvider({ children }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [language, setLanguage] = useState('br');
-
-  const value = {
-    isLoading,
-    setIsLoading,
-    language,
-    setLanguage,
-  };
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-}
-
-export default AppContext;
-import { useState, useEffect } from 'react';
-import { AppContext } from './AppContext';
+import React, { createContext, useState, useEffect } from 'react';
 import { getApiData } from '@services/js/apiServices';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [language, setLanguage] = useState('br');
-  const [languages, setLanguages] = useState();
+  const [languages, setLanguages] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +16,7 @@ export const AppProvider = ({ children }) => {
         setLanguages(getTexts);
       } catch (e) {
         console.error('Error fetching languages:', e);
+        setLanguages({});
       } finally {
         setLoading(false);
       }
@@ -40,5 +24,17 @@ export const AppProvider = ({ children }) => {
     fetchLanguages();
   }, []);
 
-  return <AppContext.Provider value={{ language, languages, setLanguage, loading }}>{children}</AppContext.Provider>;
+  const safeLanguages = languages?.[language] ?? { general: { footerLogoText: '' } };
+
+  // Ensure consumers that access appContext.languages[appContext.language]
+  // always have an object for the current language to avoid runtime errors.
+  const providedLanguages = languages ?? { [language]: safeLanguages };
+
+  return (
+    <AppContext.Provider
+      value={{ language, setLanguage, languages: providedLanguages, loading, isLoading: loading, setLoading }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };
