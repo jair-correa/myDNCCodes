@@ -54,6 +54,13 @@ armario.push('sapatos')
 const novoArmario = armario.map(itemArmario => ({name: itemArmario, isDirty : itemArmario === 'sapatos'}));
 console.log(novoArmario);
 
+console.log('------------------------------------------------------');
+
+const armarioFiltrado = novoArmario.filter(item => !item.isDirty);
+console.log(armarioFiltrado);
+
+console.log('------------------------------------------------------');
+
 console.log('\n---------shift-> remove item ao comeco da lista---------');
 armario.shift(); 
 mesa.shift();

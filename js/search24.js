@@ -1,3 +1,5 @@
+const { count } = require("console");
+
 const armario = [
     {tipo: 'livros',itens: [{nome: 'Harry Potter', qtd:5}, {nome: 'Senhor dos Anéis', qtd: 3},{nome: 'O Hobbit', qtd:10}, {nome: '1984', qtd:1}] },
     {tipo: 'canetas',itens: [{nome: 'bic', qtd:100}, {nome: 'pentel', qtd:50}]},
@@ -11,10 +13,10 @@ const tabelaExpandida = armarioSorteado.flatMap(secao =>
     secao.itens.map(item => ({
         tipo: secao.tipo,
         nome: item.nome,
-        quantidade: item.qtd
+        quantidade: item.qtd,
+        count: secao.itens.length
     }))
 );
 
 console.dir(armarioSorteado, {depth: null});
-
 console.table(tabelaExpandida);

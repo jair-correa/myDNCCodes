@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canvas API – Gráfico de Linha (dados de API)</title>
+  <style>
+    :root {
+      --bg: #0f172a;      /* slate-900 */
+      --card: #111827;    /* gray-900 */
+      --muted: #94a3b8;   /* slate-400 */
+      --text: #e5e7eb;    /* gray-200 */
+      --accent: #38bdf8;  /* sky-400 */
+      --grid: #1f2937;    /* gray-800 */
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, #0b1020, #0f172a 60%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(980px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 20px 20px 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    h1 { margin: 0 0 6px; font-weight: 700; letter-spacing: 0.2px; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      background: #1f2937;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .1s ease, background .2s ease;
+    }
+    .btn:hover { background: #263244; }
+    .legend { font-size: 12px; color: var(--muted); }
+    canvas { width: 100%; height: 440px; display: block; border-radius: 14px; background: var(--card); }
+    .footer { margin-top: 10px; display:flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .source { font-size: 12px; color: var(--muted); opacity:.9 }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Canvas API: Gráfico de Linha</h1>
+    <p>Exemplo que busca dados de uma API pública (preço do Bitcoin por dia) e desenha um gráfico usando <code>&lt;canvas&gt;</code>. Se a API não estiver disponível, usa dados simulados.</p>
+
+    <div class="row" style="margin: 8px 0 10px;">
+      <button id="reload" class="btn">Recarregar dados</button>
+      <span id="status" class="legend">Aguardando...</span>
+    </div>
+
+    <canvas id="chart" width="1200" height="600" aria-label="Gráfico de preços"></canvas>
+
+    <div class="footer">
+      <div class="legend">Passe o mouse/touche para ver o valor do ponto.</div>
+      <div class="source">Fonte: <span id="sourceLabel">api.coindesk.com (histórico de fechamento)</span></div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const statusEl = document.getElementById('status');
+    const sourceLabel = document.getElementById('sourceLabel');
+
+    // Ajuste de resolução para telas retina
+    function fitCanvasToContainer() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // escala o contexto para manter coordenadas CSS
+    }
+
+    window.addEventListener('resize', () => {
+      if (currentData.length) drawChart(currentData);
+    });
+
+    // Utilitário simples
+    const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'USD' });
+
+    let currentData = [];
+
+    async function fetchBTC() {
+      statusEl.textContent = 'Buscando dados…';
+      try {
+        // Últimos 30 dias
+        const end = new Date();
+        const start = new Date(end);
+        start.setDate(end.getDate() - 29);
+        const iso = d => d.toISOString().slice(0,10);
+        const url = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${iso(start)}&end=${iso(end)}`;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        const entries = Object.entries(json.bpi).map(([date, value]) => ({ date: new Date(date), value }));
+        entries.sort((a,b) => a.date - b.date);
+        statusEl.textContent = 'Dados carregados da API.';
+        sourceLabel.textContent = 'api.coindesk.com';
+        return entries;
+      } catch (e) {
+        // fallback: dados simulados com tendência + ruído
+        const today = new Date();
+        const arr = [];
+        let base = 60000 + Math.random()*2000; // preço base
+        for (let i=29; i>=0; i--) {
+          const d = new Date(today);
+          d.setDate(today.getDate()-i);
+          base += (Math.random()-0.5)*800; // variação diária
+          arr.push({ date: d, value: Math.max(10000, base + Math.sin(i/5)*600) });
+        }
+        statusEl.textContent = 'API indisponível, usando dados simulados.';
+        sourceLabel.textContent = 'dados simulados';
+        return arr;
+      }
+    }
+
+    function drawChart(data) {
+      currentData = data;
+      fitCanvasToContainer();
+
+      // Margens do gráfico
+      const pad = { top: 20, right: 20, bottom: 36, left: 56 };
+      const W = canvas.getBoundingClientRect().width;
+      const H = canvas.getBoundingClientRect().height;
+      const innerW = W - pad.left - pad.right;
+      const innerH = H - pad.top - pad.bottom;
+
+      // Limpar
+      ctx.clearRect(0, 0, W, H);
+
+      // Eixos & grade
+      const minY = Math.min(...data.map(d => d.value));
+      const maxY = Math.max(...data.map(d => d.value));
+      const yRange = maxY - minY || 1;
+      const xMin = data[0].date.getTime();
+      const xMax = data[data.length-1].date.getTime();
+
+      function xScale(t) { return pad.left + ( (t - xMin) / (xMax - xMin) ) * innerW; }
+      function yScale(v) { return pad.top + innerH - ((v - minY) / yRange) * innerH; }
+
+      // Grade horizontal
+      const rows = 5;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid');
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '12px ui-sans-serif, system-ui';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let i=0; i<=rows; i++) {
+        const yVal = minY + (i/rows)*yRange;
+        const y = yScale(yVal);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+        ctx.fillText(fmt.format(yVal), pad.left - 6, y);
+      }
+
+      // Eixo X (datas: 6 rótulos)
+      const cols = 6;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      for (let i=0; i<=cols; i++) {
+        const t = xMin + (i/cols)*(xMax - xMin);
+        const x = xScale(t);
+        const d = new Date(t);
+        const label = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+        ctx.fillText(label, x, H - pad.bottom + 8);
+      }
+
+      // Linha do gráfico
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+      ctx.beginPath();
+      data.forEach((pt, i) => {
+        const x = xScale(pt.date.getTime());
+        const y = yScale(pt.value);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Pontos & interação
+      const points = data.map(pt => ({ x: xScale(pt.date.getTime()), y: yScale(pt.value), v: pt.value, d: pt.date }));
+
+      // Tooltip desenhada no próprio canvas
+      function drawTooltip(px) {
+        // Encontrar ponto mais próximo
+        let nearest = null; let best = Infinity;
+        for (const p of points) {
+          const dist = Math.abs(p.x - px);
+          if (dist < best) { best = dist; nearest = p; }
+        }
+        if (!nearest) return;
+        // Guia vertical
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148,163,184,0.6)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5,5]);
+        ctx.beginPath();
+        ctx.moveTo(nearest.x, pad.top);
+        ctx.lineTo(nearest.x, H - pad.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Ponto
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(nearest.x, nearest.y, 3.5, 0, Math.PI*2);
+        ctx.fill();
+        // Caixa
+        const text = `${nearest.d.toLocaleDateString('pt-BR')} — ${fmt.format(nearest.v)}`;
+        ctx.font = '12px ui-sans-serif, system-ui';
+        const tw = ctx.measureText(text).width;
+        const th = 22;
+        const padding = 8;
+        let bx = Math.min(Math.max(nearest.x - tw/2 - padding, 8), W - tw - padding*2 - 8);
+        const by = pad.top + 8;
+        ctx.fillStyle = 'rgba(17,24,39,0.95)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, tw + padding*2, th, 8);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#e5e7eb';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, bx + padding, by + th/2);
+        ctx.restore();
+      }
+
+      // Área de clipping para não desenhar fora
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(pad.left, pad.top, innerW, innerH);
+      ctx.clip();
+      // Nada extra aqui, mas mantido para extensões futuras (zoom/scroll)
+      ctx.restore();
+
+      // Interação do mouse/touch
+      function handleMove(clientX) {
+        const rect = canvas.getBoundingClientRect();
+        const x = clientX - rect.left;
+        drawChart(data); // redesenha para limpar tooltips anteriores
+        drawTooltip(x);
+      }
+
+      canvas.onmousemove = (e) => handleMove(e.clientX);
+      canvas.ontouchstart = (e) => { if (e.touches[0]) handleMove(e.touches[0].clientX); };
+      canvas.ontouchmove = (e) => { if (e.touches[0]) handleMove(e.touches[0].clientX); };
+    }
+
+    async function load() {
+      const data = await fetchBTC();
+      drawChart(data);
+    }
+
+    document.getElementById('reload').addEventListener('click', load);
+
+    // Polyfill para CanvasRenderingContext2D.roundRect em navegadores antigos
+    if (!CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        const rr = Math.min(r, w/2, h/2);
+        this.beginPath();
+        this.moveTo(x+rr, y);
+        this.arcTo(x+w, y, x+w, y+h, rr);
+        this.arcTo(x+w, y+h, x, y+h, rr);
+        this.arcTo(x, y+h, x, y, rr);
+        this.arcTo(x, y, x+w, y, rr);
+        this.closePath();
+        return this;
+      };
+    }
+
+    load();
+  </script>
+</body>
+</html>

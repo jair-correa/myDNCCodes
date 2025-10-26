@@ -15,3 +15,4 @@ function startCounter(timer) {
 }
 
 startCounter(5);
+// startCounter(10);
