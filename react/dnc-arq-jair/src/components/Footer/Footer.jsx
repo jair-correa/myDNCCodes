@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+
 //FOOTER.JSX
 import { Link } from 'react-router-dom';
 
@@ -10,6 +12,12 @@ import TwitterIcon from '../../assets/twitter.svg';
 import InstagramIcon from '../../assets/instagram.svg';
 import LinkedinIcon from '../../assets/linkedin.svg';
 import './Footer.css';
+
+//CONTEXTS
+
+import { AppContext } from '../../contexts/AppContext';
+
+import Button from '@components/Button/Button';
 
 function Footer() {
   // Dados dinâmicos para evitar repetição
@@ -26,6 +34,10 @@ function Footer() {
     { to: '/projects', label: 'Projects' },
     { to: '/contact', label: 'Contact' },
   ];
+  const appContext = useContext(AppContext);
+  const changeLanguage = (country) => {
+    appContext.setLanguage(country);
+  };
 
   return (
     <footer>
@@ -72,8 +84,12 @@ function Footer() {
             <p className='grey-1-color'>Copyright © DNC - 2024</p>
           </div>
           <div className='langs-area d-flex'>
-            <img src={BrasilIcon} height='29px' alt='Português (Brasil)' />
-            <img src={UsaIcon} height='29px' alt='English (US)' />
+            <Button buttonStyle='unstyled' onClick={() => changeLanguage('br')}>
+              <img src={BrasilIcon} height='29px' alt='Português (Brasil)' />
+            </Button>
+            <Button buttonStyle='unstyled' onClick={() => changeLanguage('us')}>
+              <img src={UsaIcon} height='29px' alt='English (US)' />
+            </Button>{' '}
           </div>
         </div>
       </div>
