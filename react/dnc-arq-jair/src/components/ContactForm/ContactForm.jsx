@@ -1,60 +1,89 @@
 /* eslint-disable no-undef */
-import { useStatus, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-//ASSETS
+// ASSETS
 import './ContactForm.css';
 
-//COMPONENTS
+// COMPONENTS
 import Button from '@components/Button/Button';
 
 function ContactForm() {
-  const [formData, setFormData] = useStatus({
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
   });
-  const [isFormValid, setIsFormValid] = useStatus(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [formSubmitLoading, setFormSubmitLoading] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isFormValid) {
-      null;
+      setFormSubmitLoading(true);
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            access_key: 'ebba954b-2c47-4913-9df7-c432e48d1372', // ← insira sua chave da Web3Forms aqui
+          }),
+        });
+
+        if (response.ok) {
+          setFormSubmitted(true);
+          setFormData({ name: '', email: '', message: '' });
+        } else {
+          console.error('Erro ao enviar formulário');
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+      } finally {
+        setFormSubmitLoading(false);
+      }
     }
   };
+
   useEffect(() => {
-    const isValidEmail = (email) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    };
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const isValid = formData.name.trim() && formData.email.trim() && isValidEmail(formData.email) && formData.message.trim();
 
-    setIsFormValid(isValid);
+    setIsFormValid(Boolean(isValid));
   }, [formData]);
 
   const handleChange = (e) => {
-    const [name, value] = [e.target];
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
   };
+
   return (
-    <div className='contact-form d-flex fd-column al-cente'>
+    <div className='contact-form d-flex fd-column al-center'>
       <h2>We love meeting new people and helping them.</h2>
-      <form>
-        <div className='d-flex form-group '>
-          <input className='form-input' type='text' id='name' name='name' placeholder=' Name *' onChange={handleChange} />
-          <input className='form-input' type='email' id='email' name='email' placeholder=' Email *' onChange={handleChange} />
+
+      <form onSubmit={handleSubmit}>
+        <div className='d-flex form-group'>
+          <input className='form-input' type='text' id='name' name='name' placeholder='Name *' value={formData.name} onChange={handleChange} />
+          <input className='form-input' type='email' id='email' name='email' placeholder='Email *' value={formData.email} onChange={handleChange} />
         </div>
-        <div className='d-flex form-group '>
-          <textarea className='form-input' id='message' name='message' placeholder='Mensagem *' onChange={handleChange} rows='4'></textarea>
+
+        <div className='d-flex form-group'>
+          <textarea className='form-input' id='message' name='message' placeholder='Message *' value={formData.message} onChange={handleChange} rows='4'></textarea>
         </div>
-        <div className='al-center d-flex jc-end form-group '>
-          <Button type='submit' buttonStyle='secondary' disabled={!isFormValid} onClick={handleSubmit}>
-            Enviar
+
+        <div className='al-center d-flex jc-end form-group'>
+          <Button type='submit' buttonStyle='secondary' disabled={!isFormValid || formSubmitLoading}>
+            {formSubmitLoading ? 'Enviando...' : 'Enviar'}
           </Button>
         </div>
       </form>
+
+      {formSubmitted && <p>Mensagem enviada com sucesso!</p>}
     </div>
   );
 }
