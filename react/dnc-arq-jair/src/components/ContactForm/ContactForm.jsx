@@ -29,7 +29,7 @@ function ContactForm() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ...formData,
-            access_key: 'ebba954b-2c47-4913-9df7-c432e48d1372', // ← insira sua chave da Web3Forms aqui
+            access_key: 'ebba954b-2c47-4913-9df7-c432e48d1372',
           }),
         });
 
