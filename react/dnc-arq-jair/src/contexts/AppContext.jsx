@@ -5,7 +5,8 @@ import { getApiData } from '@services/js/apiServices';
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [language, setLanguage] = useState('br');
+  const saveLanguage = localStorage.getItem('lang');
+  const [language, setLanguage] = useState(saveLanguage ?? 'br');
   const [languages, setLanguages] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,6 +25,9 @@ export const AppProvider = ({ children }) => {
     fetchLanguages();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('lang', language);
+  }, [language]);
   const safeLanguages = languages?.[language] ?? {
     general: {
       footerLogoText: '',
