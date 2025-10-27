@@ -13,13 +13,13 @@ import Button from '@components/Button/Button';
 import { AppContext } from '../../contexts/AppContext';
 
 function Header() {
+  const appContext = useContext(AppContext);
+  const { language, languages } = appContext || {};
+
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  const appContext = useContext(AppContext);
-  const { language, languages } = appContext || {};
 
   return (
     <header>
