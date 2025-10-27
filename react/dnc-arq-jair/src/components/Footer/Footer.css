@@ -77,7 +77,7 @@ footer nav a {
 }
 
 /* ----------- MOBILE ----------- */
-@media (max-width: 768px) {
+@media (max-width: 688px) {
   .d-flex {
     flex-direction: column;
     align-items: flex-start; /* keep columns left-aligned on mobile */
@@ -87,14 +87,40 @@ footer nav a {
   }
 
   .footer-copy {
+    background-color: transparent;
     flex-direction: column;
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
     margin: 2.5rem 0;
     gap: 0.75rem;
-    font-size: 0.95rem; /* slightly smaller on mobile */
+    font-size: 0.95rem;
   }
 
+  .footer-copy .langs-area {
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .footer-copy > div {
+    width: 100%;
+    text-align: left;
+  }
+  .footer-copy-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-copy-grid > div:first-child {
+    justify-self: end;
+  }
+
+  .footer-copy-grid > .langs-area {
+    justify-self: end;
+    display: flex;
+    gap: 10px;
+  }
   .footer-col,
   .footer-logo-col {
     max-width: 100%;
@@ -105,7 +131,7 @@ footer nav a {
   /* Center only the section headings (e.g. Pages, Contact) on mobile */
   .footer-col h3 {
     width: 100%;
-    text-align: center;
+    text-align: left;
     margin: 0 0 1rem 0;
     font-size: 1.4rem;
   }
@@ -120,14 +146,14 @@ footer nav a {
   }
 }
 
-/* On very small screens, make social icons horizontal and centered to match the design */
+/* On very small screens, make social icons horizontal with proper spacing */
 @media (max-width: 768px) {
   footer .social-links {
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 5rem;
     width: 100%;
-    margin: 10rem 0 1.25rem 0;
+    margin: 1.5rem 0;
   }
 
   footer .social-links img {

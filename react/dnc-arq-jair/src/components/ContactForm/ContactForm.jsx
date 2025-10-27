@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
 // ASSETS
 import './ContactForm.css';
@@ -7,7 +7,13 @@ import './ContactForm.css';
 // COMPONENTS
 import Button from '@components/Button/Button';
 
+//CONTEXT
+import { AppContext } from '../../contexts/AppContext';
+
 function ContactForm() {
+  const appContext = useContext(AppContext);
+  const { language, languages } = appContext || {};
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -64,26 +70,26 @@ function ContactForm() {
 
   return (
     <div className='contact-form d-flex fd-column al-center'>
-      <h2>We love meeting new people and helping them.</h2>
+      <h2>{languages?.[language]?.contact?.title || 'TITLE'}</h2>
 
       <form onSubmit={handleSubmit}>
         <div className='d-flex form-group'>
-          <input className='form-input' type='text' id='name' name='name' placeholder='Name *' value={formData.name} onChange={handleChange} />
-          <input className='form-input' type='email' id='email' name='email' placeholder='Email *' value={formData.email} onChange={handleChange} />
+          <input className='form-input' type='text' id='name' name='name' placeholder={languages?.[language]?.contact?.pl1 || 'pl1'} value={formData.name} onChange={handleChange} />
+          <input className='form-input' type='email' id='email' name='email' placeholder={languages?.[language]?.contact?.pl2 || 'pl2'} value={formData.email} onChange={handleChange} />
         </div>
 
         <div className='d-flex form-group'>
-          <textarea className='form-input' id='message' name='message' placeholder='Message *' value={formData.message} onChange={handleChange} rows='4'></textarea>
+          <textarea className='form-input' id='message' name='message' placeholder={languages?.[language]?.contact?.pl3 || 'pl3'} value={formData.message} onChange={handleChange} rows='4'></textarea>
         </div>
 
         <div className='al-center d-flex jc-end form-group'>
           <Button type='submit' buttonStyle='secondary' disabled={!isFormValid || formSubmitLoading}>
-            {formSubmitLoading ? 'Enviando...' : 'Enviar'}
+            {languages?.[language]?.general?.send || 'send'}
           </Button>
         </div>
       </form>
 
-      {formSubmitted && <p>Mensagem enviada com sucesso!</p>}
+      {formSubmitted && <p>{languages?.[language]?.contact?.successMsg || 'successMsg'}</p>}
     </div>
   );
 }

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
+//CONTEXT
+import { AppContext } from '../../contexts/AppContext';
 // ASSETS
 import './ProjectsList.css';
 import LikedFilled from '@assets/like-filled.svg';
@@ -9,6 +11,8 @@ import Liked from '@assets/like.svg';
 import { getApiData } from '@services/js/apiServices';
 
 function ProjectsList() {
+  const appContext = useContext(AppContext);
+  const { language, languages } = appContext || {};
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
@@ -35,8 +39,8 @@ function ProjectsList() {
   return (
     <div className='projects-section'>
       <div className='projects-hero'>
-        <h2>Follow Our Projects</h2>
-        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+        <h2>{languages?.[language]?.projects?.title || 'TITLE'}</h2>
+        <p>{languages?.[language]?.projects?.subtitle || 'SUBTITLE'}</p>
       </div>
       <div className='projects-grid'>
         {projects.length > 0 ? (

@@ -63,7 +63,7 @@ function Footer() {
           {/* Coluna links e contato */}
           <div className='d-flex'>
             <nav className='footer-col' aria-label='Links principais'>
-              <h3>Pages</h3>
+              <h3>{languages?.[language]?.general?.pages || 'Pages'}</h3>
               <ul>
                 {pageLinks.map(({ to, label }) => (
                   <li key={to}>
@@ -75,7 +75,7 @@ function Footer() {
           </div>
 
           <div className='footer-col'>
-            <h3>Contact</h3>
+            <h3>{languages?.[language]?.general?.contact || 'Contact'}</h3>
             <p className='grey-1-color'>R. Justino Cobra, 61 – Vila Ema | São José dos Campos – SP | CEP 12243-030</p>
             <p className='grey-1-color'>suporte@escoladnc.com.br</p>
             <p className='grey-1-color'>(19) 99187-4342</p>
@@ -83,11 +83,11 @@ function Footer() {
         </div>
 
         {/* Copyright + Idiomas */}
-        <div className='d-flex jc-space-between footer-copy'>
+        <div className='d-flex jc-space-between footer-copy footer-copy-grid'>
           <div>
             <p className='grey-1-color'>Copyright © DNC - 2024</p>
           </div>
-          <div className='langs-area d-flex'>
+          <div className='langs-area'>
             <Button buttonStyle='unstyled' onClick={() => changeLanguage('br')}>
               <img src={BrasilIcon} height='29px' alt='Português (Brasil)' />
             </Button>
