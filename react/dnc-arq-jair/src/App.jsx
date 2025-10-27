@@ -14,7 +14,7 @@ import { AppContext } from './contexts/AppContext';
 function App() {
   const appContext = useContext(AppContext);
 
-  if (appContext.isLoading) {
+  if (appContext.loading) {
     return <LoadingSpinner />;
   }
 

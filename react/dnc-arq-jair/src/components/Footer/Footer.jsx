@@ -28,15 +28,19 @@ function Footer() {
     { href: 'https://instagram.com', icon: InstagramIcon, alt: 'Instagram' },
   ];
 
-  const pageLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/about', label: 'About' },
-    { to: '/projects', label: 'Projects' },
-    { to: '/contact', label: 'Contact' },
-  ];
   const appContext = useContext(AppContext);
+  const { language, languages } = appContext || {};
+
+  const pageLinks = [
+    { to: '/', label: languages?.[language]?.menu?.home || 'Home' },
+    { to: '/about', label: languages?.[language]?.menu?.about || 'About' },
+    { to: '/projects', label: languages?.[language]?.menu?.projects || 'Projects' },
+    { to: '/contact', label: languages?.[language]?.menu?.contact || 'Contact' },
+  ];
   const changeLanguage = (country) => {
-    appContext.setLanguage(country);
+    if (appContext?.setLanguage) {
+      appContext.setLanguage(country);
+    }
   };
 
   return (
@@ -46,7 +50,7 @@ function Footer() {
           {/* Coluna logo */}
           <div className='footer-logo-col mobile-fd-column'>
             <img src={Logo} className='footer-logo' alt='Logo DNC' />
-            <p className='grey-1-color'>A escola que prepara você para as profissões em alta no mercado de trabalho.</p>
+            <p className='grey-1-color'>{languages?.[language]?.general?.footerLogoText || ''}</p>
             <div className='d-flex social-links '>
               {socialLinks.map(({ href, icon, alt }, index) => (
                 <a key={index} href={href} target='_blank' rel='noopener noreferrer'>
@@ -87,9 +91,9 @@ function Footer() {
             <Button buttonStyle='unstyled' onClick={() => changeLanguage('br')}>
               <img src={BrasilIcon} height='29px' alt='Português (Brasil)' />
             </Button>
-            <Button buttonStyle='unstyled' onClick={() => changeLanguage('us')}>
+            <Button buttonStyle='unstyled' onClick={() => changeLanguage('en')}>
               <img src={UsaIcon} height='29px' alt='English (US)' />
-            </Button>{' '}
+            </Button>
           </div>
         </div>
       </div>

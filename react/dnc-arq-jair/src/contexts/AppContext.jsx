@@ -24,17 +24,21 @@ export const AppProvider = ({ children }) => {
     fetchLanguages();
   }, []);
 
-  const safeLanguages = languages?.[language] ?? { general: { footerLogoText: '' } };
+  const safeLanguages = languages?.[language] ?? {
+    general: {
+      footerLogoText: '',
+    },
+    menu: {
+      home: 'Home',
+      about: 'About',
+      projects: 'Projects',
+      contact: 'Contact',
+    },
+  };
 
   // Ensure consumers that access appContext.languages[appContext.language]
   // always have an object for the current language to avoid runtime errors.
   const providedLanguages = languages ?? { [language]: safeLanguages };
 
-  return (
-    <AppContext.Provider
-      value={{ language, setLanguage, languages: providedLanguages, loading, isLoading: loading, setLoading }}
-    >
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={{ language, setLanguage, languages: providedLanguages, loading, isLoading: loading, setLoading }}>{children}</AppContext.Provider>;
 };
