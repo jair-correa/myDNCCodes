@@ -2,18 +2,36 @@ import { useContext, useState, useEffect } from 'react';
 
 //CONTEXT
 import { AppContext } from '../../contexts/AppContext';
+
+// COMPONENTS
+import Button from '../Button/Button';
 // ASSETS
 import './ProjectsList.css';
 import LikedFilled from '@assets/like-filled.svg';
-import Liked from '@assets/like.svg';
+import LikeOutline from '@assets/like.svg';
 
 // UTILS
 import { getApiData } from '@services/js/apiServices';
 
 function ProjectsList() {
+  const [projects, setProjects] = useState([]);
+  const [favProjects, setFavProject] = useState([]);
+
   const appContext = useContext(AppContext);
   const { language, languages } = appContext || {};
-  const [projects, setProjects] = useState([]);
+
+  const handleSavedProjects = (id) => {
+    setFavProject((prevFavProjects) => {
+      if (prevFavProjects.includes(id)) {
+        const filterArray = prevFavProjects.filter((projectId) => projectId !== id);
+        sessionStorage.setItem('favProjects', JSON.stringify(filterArray));
+        return prevFavProjects.filter((projectId) => projectId !== id);
+      } else {
+        sessionStorage.setItem('favProjects', JSON.stringify([...prevFavProjects, id]));
+        return [...prevFavProjects, id];
+      }
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +44,13 @@ function ProjectsList() {
     };
     fetchData();
   }, []); // garante que a função seja executada apenas uma vez quando o componente for montado
+
+  useEffect(() => {
+    const savedFavProjects = JSON.parse(sessionStorage.getItem('favProjects'));
+    if (savedFavProjects) {
+      setFavProject(savedFavProjects);
+    }
+  }, []);
 
   // Corrige HTTPS -> HTTP apenas no ambiente local (opcional)
   const fixImageUrl = (url) => {
@@ -61,7 +86,9 @@ function ProjectsList() {
               </div>
               <h3>{project.title}</h3>
               <p>{project.subtitle}</p>
-              <img src={LikedFilled} height='20px' alt='like icon' />
+              <Button buttonStyle='unstyled' onClick={() => handleSavedProjects(project.id)}>
+                <img src={favProjects.includes(project.id) ? LikedFilled : LikeOutline} height='20px' alt='like icon' />
+              </Button>
             </div>
           ))
         ) : (
