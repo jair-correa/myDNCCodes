@@ -4,11 +4,10 @@ import { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../contexts/AppContext';
 
 // COMPONENTS
-import Button from '../Button/Button';
+import ProjectCard from '../ProjectCard/ProjectCard';
+
 // ASSETS
 import './ProjectsList.css';
-import LikedFilled from '@assets/like-filled.svg';
-import LikeOutline from '@assets/like.svg';
 
 // UTILS
 import { getApiData } from '@services/js/apiServices';
@@ -52,15 +51,6 @@ function ProjectsList() {
     }
   }, []);
 
-  // Corrige HTTPS -> HTTP apenas no ambiente local (opcional)
-  const fixImageUrl = (url) => {
-    if (!url) return '';
-    if (window.location.hostname === 'localhost' && url?.startsWith('https://')) {
-      return url.replace('https://', 'http://');
-    }
-    return url;
-  };
-
   return (
     <div className='projects-section'>
       <div className='projects-hero'>
@@ -70,26 +60,12 @@ function ProjectsList() {
       <div className='projects-grid'>
         {projects.length > 0 ? (
           projects.map((project) => (
-            <div className='project-card d-flex jc-center al-center fd-column' key={project.id || `${project.title}-${Math.random()}`}>
-              <div className='thumb tertiary-background'>
-                <img
-                  className='thumb-img'
-                  src={fixImageUrl(project.thumb)}
-                  alt={project.title}
-                  onError={(e) => {
-                    // When remote image fails (DNS, CORS, mixed content), hide the <img>
-                    // leaving the card without an image as requested.
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-              <h3>{project.title}</h3>
-              <p>{project.subtitle}</p>
-              <Button buttonStyle='unstyled' onClick={() => handleSavedProjects(project.id)}>
-                <img src={favProjects.includes(project.id) ? LikedFilled : LikeOutline} height='20px' alt='like icon' />
-              </Button>
-            </div>
+            <ProjectCard
+              key={project.id || `${project.title}-${Math.random()}`}
+              project={project}
+              isFavorite={favProjects.includes(project.id)}
+              onToggleFavorite={handleSavedProjects}
+            />
           ))
         ) : (
           <p className='no-projects'>Nenhum projeto encontrado.</p>
