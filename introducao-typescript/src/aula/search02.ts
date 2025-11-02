@@ -1,6 +1,6 @@
 function desejarBoasVindas(nome: string, idade: string, internado: boolean): void {
   console.log(`Boas vindas ${nome}`);
-  console.log(`Voce tem ${nome} anos de idade`);
+  console.log(`Voce tem ${idade} anos de idade`);
 
   if (internado == true) {
     console.log('Voce esta internado');
