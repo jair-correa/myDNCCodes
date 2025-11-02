@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# Introdução ao TypeScript
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Projeto de estudos de TypeScript com React, Vite e exercícios práticos.
 
-Currently, two official plugins are available:
+## 🚀 Stack Tecnológico
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **TypeScript 5.9.3** - Superset JavaScript com tipagem estática
+- **React 19.1.1** - Biblioteca UI
+- **Vite 7.1.7** - Build tool e dev server
+- **ESLint 9.36.0** - Linter para qualidade de código
 
-## React Compiler
+## 📁 Estrutura do Projeto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+introducao-typescript/
+├── src/
+│   ├── aula/          # Exercícios de TypeScript
+│   │   ├── search01.ts
+│   │   ├── search02.ts
+│   │   ├── search03.ts
+│   │   ├── search04.ts
+│   │   ├── search05.ts
+│   │   ├── search06.ts
+│   │   └── search07.ts
+│   ├── App.tsx        # Componente principal React
+│   └── main.tsx       # Entry point
+├── build/             # Arquivos compilados TypeScript
+├── public/            # Assets estáticos
+└── Intro a Typescript - Lista de Exercícios.pdf
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🎯 Exercícios Implementados
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+O diretório `src/aula/` contém 7 exercícios práticos de TypeScript cobrindo:
+- Tipos básicos e interfaces
+- Funções e arrow functions
+- Classes e orientação a objetos
+- Generics e tipos avançados
+- Manipulação de arrays e objetos
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️ Instalação
+
+```bash
+npm install
 ```
+
+## 📜 Scripts Disponíveis
+
+```bash
+npm run dev      # Inicia servidor de desenvolvimento (localhost:5173)
+npm run build    # Build de produção
+npm run lint     # Executa ESLint
+npm run preview  # Preview do build de produção
+```
+
+## 🏃 Como Executar
+
+```bash
+npm run dev
+```
+
+Acesse `http://localhost:5173` no navegador.
+
+## 📝 Configuração TypeScript
+
+O projeto utiliza múltiplas configurações:
+- `tsconfig.json` - Configuração base
+- `tsconfig.app.json` - Config para código da aplicação
+- `tsconfig.node.json` - Config para scripts Node.js (Vite)
+
+## 🔧 ESLint
+
+Configuração com regras para React e TypeScript. Para executar:
+
+```bash
+npm run lint
+```
+
+## 📚 Recursos
+
+- [TypeScript Docs](https://www.typescriptlang.org/)
+- [React 19 Docs](https://react.dev/)
+- [Vite Guide](https://vite.dev/guide/)
+
+---
+
+**Versão:** 0.0.0  
+**Licença:** Private
