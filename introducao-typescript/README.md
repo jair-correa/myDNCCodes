@@ -1,6 +1,6 @@
 # Introdução ao TypeScript
 
-Projeto de estudos de TypeScript com React, Vite e exercícios práticos.
+Projeto de estudos de TypeScript com React, Vite.
 
 ## 🚀 Stack Tecnológico
 
@@ -14,29 +14,12 @@ Projeto de estudos de TypeScript com React, Vite e exercícios práticos.
 ```
 introducao-typescript/
 ├── src/
-│   ├── aula/          # Exercícios de TypeScript
-│   │   ├── search01.ts
-│   │   ├── search02.ts
-│   │   ├── search03.ts
-│   │   ├── search04.ts
-│   │   ├── search05.ts
-│   │   ├── search06.ts
-│   │   └── search07.ts
 │   ├── App.tsx        # Componente principal React
 │   └── main.tsx       # Entry point
 ├── build/             # Arquivos compilados TypeScript
 ├── public/            # Assets estáticos
 └── Intro a Typescript - Lista de Exercícios.pdf
 ```
-
-## 🎯 Exercícios Implementados
-
-O diretório `src/aula/` contém 7 exercícios práticos de TypeScript cobrindo:
-- Tipos básicos e interfaces
-- Funções e arrow functions
-- Classes e orientação a objetos
-- Generics e tipos avançados
-- Manipulação de arrays e objetos
 
 ## 🛠️ Instalação
 
@@ -64,6 +47,7 @@ Acesse `http://localhost:5173` no navegador.
 ## 📝 Configuração TypeScript
 
 O projeto utiliza múltiplas configurações:
+
 - `tsconfig.json` - Configuração base
 - `tsconfig.app.json` - Config para código da aplicação
 - `tsconfig.node.json` - Config para scripts Node.js (Vite)

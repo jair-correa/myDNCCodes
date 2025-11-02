@@ -34,3 +34,5 @@ dist-ssr
 # Project specific
 .cursorrules
 node_modules/.vite/
+
+.pdf
